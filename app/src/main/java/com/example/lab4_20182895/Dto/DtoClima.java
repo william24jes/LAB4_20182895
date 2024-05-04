@@ -275,6 +275,12 @@ public class DtoClima {
         }
 
         public String getDeg() {
+            double windDegree = Double.parseDouble(deg);
+
+            String[] directions = {"Norte", "Norte-Noreste", "Noreste", "Este-Noreste", "Este", "Este-Sureste", "Sureste", "Sur-Sureste", "Sur", "Sur-Suroeste", "Suroeste", "Oeste-Suroeste", "Oeste", "Oeste-Noroeste", "Noroeste", "Norte-Noroeste"};
+            int index = (int) Math.round((windDegree % 360) / 22.5);
+
+            this.deg = directions[(index + 16) % 16];
             return deg;
         }
 
