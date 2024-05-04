@@ -104,12 +104,8 @@ public class clima extends Fragment {
 
         NavController navController = NavHostFragment.findNavController(clima.this);
         climaBinding.geoDeClima.setOnClickListener(view -> {
-
             navController.navigate(R.id.action_clima_to_geolocalizacion);
         });
-
-
-
 
         // Inflate the layout for this fragment
         return climaBinding.getRoot();
@@ -123,9 +119,10 @@ public class clima extends Fragment {
                     if (response.isSuccessful()) {
                         DtoClima dtoClima = response.body();
                         if (dtoClima != null) {
-                            climasBuscados.clear();
+                            // Agregar el nuevo objeto DtoClima a la lista
                             climasBuscados.add(dtoClima);
 
+                            // Actualizar el RecyclerView con la lista actualizada
                             ClimaAdapter climaAdapter = new ClimaAdapter();
                             climaAdapter.setListaClima(climasBuscados);
                             climaBinding.recycleClima.setAdapter(climaAdapter);
