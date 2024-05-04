@@ -9,7 +9,88 @@
     android:orientation="vertical">
     <!--android:padding="8dp"-->
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/recCard_item_listsuper_admin"
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:backgroundTint="#A1C6E4"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recCiudadClima"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:text="Lima"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/recTempActual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:padding="6dp"
+                    android:paddingEnd="30dp"
+                    android:text="12.5k"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                android:textAlignment="center">
+
+                <TextView
+                    android:id="@+id/recMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:text="Min: 12k"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/recMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:text="Max: 13k"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/recViento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:text="Viento: Oeste"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
 
 
