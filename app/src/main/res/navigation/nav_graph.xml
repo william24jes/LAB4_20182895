@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/geolocalizacion">
+
+    <fragment
+        android:id="@+id/geolocalizacion"
+        android:name="com.example.lab4_20182895.geolocalizacion"
+        android:label="geolocalizacion"
+        tools:layout="@layout/geolocalizacion" >
+        <action
+            android:id="@+id/action_geolocalizacion_to_clima"
+            app:destination="@id/clima" />
+    </fragment>
+    <fragment
+        android:id="@+id/clima"
+        android:name="com.example.lab4_20182895.clima"
+        android:label="clima"
+        tools:layout="@layout/clima" >
+        <action
+            android:id="@+id/action_clima_to_geolocalizacion"
+            app:destination="@id/geolocalizacion" />
+    </fragment>
+</navigation>
