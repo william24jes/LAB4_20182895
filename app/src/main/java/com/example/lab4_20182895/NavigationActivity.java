@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.ui.AppBarConfiguration;
 
-import com.example.lab4_20182895.databinding.NavigationActivityBinding;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    NavigationActivityBinding navigationActivityBinding;
-
+    AppBarConfiguration
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
