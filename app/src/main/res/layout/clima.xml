@@ -4,14 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#03A9F4"
     tools:context=".clima">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/buscarLongitud"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/search_bkg"
+        android:focusable="false"
+        app:closeIcon="@drawable/close_fill0_wght400_grad0_opsz24"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.605"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Longitud" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/buscarLatitud"
+        android:layout_width="155dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/search_bkg"
+        android:focusable="false"
+        app:closeIcon="@drawable/close_fill0_wght400_grad0_opsz24"
+        app:hideNavigationIcon="false"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Latitud" />
+
+    <Button
+        android:id="@+id/botonBuscarClima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Buscar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/toolbar_geo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#54CCC5"
+        android:background="#3F51B5"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
@@ -19,28 +64,40 @@
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <ImageView
-            android:id="@+id/sol_clima"
+        <Button
+            android:id="@+id/geoDeClima"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/baseline_sunny_24" />
+            android:backgroundTint="#FFFFFF"
+            android:text="Geolocalización"
+            android:textColor="#3F51B5"
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/andro_clima"
-            android:layout_width="98dp"
-            android:layout_height="56dp"
+        <Button
+            android:id="@+id/climaDeClima"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:backgroundTint="#FFFFFF"
+            android:text="Clima"
+            android:textColor="#3F51B5"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
 
     <TextView
-        android:layout_width="155dp"
-        android:layout_height="73dp"
-        android:text="clima"
-        tools:layout_editor_absoluteX="113dp"
-        tools:layout_editor_absoluteY="166dp" />
+        android:layout_width="148dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="28dp"
+        android:text="Buscar clima"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

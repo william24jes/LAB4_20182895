@@ -69,7 +69,7 @@ public class geolocalizacion extends Fragment {
 
 
         NavController navController = NavHostFragment.findNavController(geolocalizacion.this);
-        geolocalizacionBinding.solGeo.setOnClickListener(view -> {
+        geolocalizacionBinding.climaDeGeo.setOnClickListener(view -> {
 
             navController.navigate(R.id.action_geolocalizacion_to_clima);
         });

@@ -4,17 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#03A9F4"
     tools:context=".geolocalizacion">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:layout_width="205dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="316dp"
-        android:text="geo"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/buscarCiudad"
+        android:layout_width="255dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/search_bkg"
+        android:focusable="false"
+        app:closeIcon="@drawable/close_fill0_wght400_grad0_opsz24"
+        app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.548"
+        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Ciudad"
+        app:searchHintIcon="@null" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="230dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="28dp"
+        android:text="Buscar geolocalización"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +42,7 @@
         android:id="@+id/toolbar_geo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#54CCC5"
+        android:background="#3F51B5"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
@@ -31,23 +51,39 @@
         app:layout_constraintStart_toStartOf="parent">
 
 
-        <ImageView
-            android:id="@+id/sol_geo"
+        <Button
+            android:id="@+id/geoDeGeo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
-            app:srcCompat="@drawable/baseline_sunny_24" />
+            android:backgroundTint="#FFFFFF"
+            android:text="Geolocalización"
+            android:textColor="#3F51B5"
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/andro_geo"
-            android:layout_width="98dp"
-            android:layout_height="56dp"
+        <Button
+            android:id="@+id/climaDeGeo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:backgroundTint="#FFFFFF"
+            android:text="Clima"
+            android:textColor="#3F51B5"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/botonBuscarGeo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Buscar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

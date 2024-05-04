@@ -68,7 +68,7 @@ public class clima extends Fragment {
         climaBinding= ClimaBinding.inflate(inflater, container, false);
 
         NavController navController = NavHostFragment.findNavController(clima.this);
-        climaBinding.androClima.setOnClickListener(view -> {
+        climaBinding.geoDeClima.setOnClickListener(view -> {
 
             navController.navigate(R.id.action_clima_to_geolocalizacion);
         });
