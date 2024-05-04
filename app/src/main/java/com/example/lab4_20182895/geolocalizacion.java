@@ -1,7 +1,12 @@
 package com.example.lab4_20182895;
 
+import static android.content.Context.SENSOR_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.lab4_20182895.Dto.DtoCiudad;
 import com.example.lab4_20182895.Recycle.GeolocalizacionAdapter;
@@ -40,6 +46,7 @@ public class geolocalizacion extends Fragment {
     GeolocalizacionBinding geolocalizacionBinding;
     CiudadService ciudadService;
     private List<DtoCiudad> ciudadesBuscadas = new ArrayList<>(); // Lista de todas las ciudades buscadas
+    SensorManager mSensorManager;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,6 +94,33 @@ public class geolocalizacion extends Fragment {
                              Bundle savedInstanceState) {
 
         geolocalizacionBinding = GeolocalizacionBinding.inflate(inflater, container, false);
+
+        mSensorManager = (SensorManager) requireContext().getSystemService(SENSOR_SERVICE);
+
+        if(mSensorManager != null){ //validar si tengo sensores
+
+            Sensor acelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Sensor magnetometro = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+            if(acelerometer != null) { //validar un sensor en particular
+                Toast.makeText(requireContext(), "Sí tiene acelerómetro", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(requireContext(), "Su equipo no dispone de acelerómetro",Toast.LENGTH_SHORT).show();
+            }
+
+            if(magnetometro != null) { //validar un sensor en particular
+                Toast.makeText(requireContext(), "Sí tiene magnetometro", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(requireContext(), "Su equipo no dispone de magnetometro",Toast.LENGTH_SHORT).show();
+            }
+
+            List<Sensor> sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+            for(Sensor sensor : sensorList){
+                Log.d("msg-test-sensorList","sensorName: " + sensor.getName());
+            }
+        }else{
+            Toast.makeText(requireContext(), "Su dispositivo no posee sensores :(", Toast.LENGTH_SHORT).show();
+        }
 
 
         //API
