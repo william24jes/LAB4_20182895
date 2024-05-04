@@ -6,6 +6,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -47,6 +48,7 @@ public class geolocalizacion extends Fragment {
     CiudadService ciudadService;
     private List<DtoCiudad> ciudadesBuscadas = new ArrayList<>(); // Lista de todas las ciudades buscadas
     SensorManager mSensorManager;
+    SensorAccListener listener = new SensorAccListener();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -131,6 +133,7 @@ public class geolocalizacion extends Fragment {
                 .create(CiudadService.class);
         //
 
+
         geolocalizacionBinding.botonBuscarGeo.setOnClickListener(view -> {
             fetchInfo(geolocalizacionBinding.buscarCiudad.getQuery().toString());
         });
@@ -141,6 +144,25 @@ public class geolocalizacion extends Fragment {
         });
         // Inflate the layout for this fragment
         return geolocalizacionBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Sensor mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(listener,mAccelerometer,SensorManager.SENSOR_DELAY_UI);
+        //mSensorManager.registerListener(listener,mAcc,20000000);
+
+        //Sensor mGyr = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        //mSensorManager.registerListener(listener,mGyr,SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mSensorManager.unregisterListener(listener);
     }
 
     public void fetchInfo(String ciudad) {
@@ -188,4 +210,6 @@ public class geolocalizacion extends Fragment {
         }
         return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
     }
+
+
 }
