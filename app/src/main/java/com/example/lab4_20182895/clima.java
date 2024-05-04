@@ -1,18 +1,34 @@
 package com.example.lab4_20182895;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.lab4_20182895.Dto.DtoCiudad;
+import com.example.lab4_20182895.Dto.DtoClima;
+import com.example.lab4_20182895.Recycle.ClimaAdapter;
+import com.example.lab4_20182895.Recycle.GeolocalizacionAdapter;
 import com.example.lab4_20182895.Services.CiudadService;
+import com.example.lab4_20182895.Services.ClimaService;
 import com.example.lab4_20182895.databinding.ClimaBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -24,6 +40,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class clima extends Fragment {
 
     ClimaBinding climaBinding;
+    ClimaService climaService;
+    private List<DtoClima> climasBuscados = new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,6 +89,19 @@ public class clima extends Fragment {
 
         climaBinding= ClimaBinding.inflate(inflater, container, false);
 
+        //API
+        climaService = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ClimaService.class);
+        //
+
+        //FALTA VERIFICAR QUE FUNCIONE CUANDO NO ESTEN VACIOS LOS DOS CAMPOS
+        climaBinding.botonBuscarClima.setOnClickListener(view -> {
+            fetchInfo(climaBinding.buscarLatitud.getQuery().toString(), climaBinding.buscarLongitud.getQuery().toString());
+        });
+
         NavController navController = NavHostFragment.findNavController(clima.this);
         climaBinding.geoDeClima.setOnClickListener(view -> {
 
@@ -82,5 +113,50 @@ public class clima extends Fragment {
 
         // Inflate the layout for this fragment
         return climaBinding.getRoot();
+    }
+
+    public void fetchInfo(String lat, String lon) {
+        if (tengoInternet()) {
+            climaService.getClima(lat, lon, "792edf06f1f5ebcaf43632b55d8b03fe").enqueue(new Callback<DtoClima>() {
+                @Override
+                public void onResponse(Call<DtoClima> call, Response<DtoClima> response) {
+                    if (response.isSuccessful()) {
+                        DtoClima dtoClima = response.body();
+                        if (dtoClima != null) {
+                            climasBuscados.clear();
+                            climasBuscados.add(dtoClima);
+
+                            ClimaAdapter climaAdapter = new ClimaAdapter();
+                            climaAdapter.setListaClima(climasBuscados);
+                            climaBinding.recycleClima.setAdapter(climaAdapter);
+                            climaBinding.recycleClima.setLayoutManager(new LinearLayoutManager(getContext()));
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DtoClima> call, Throwable t) {
+                    Log.e("fetchInfo", "Error al realizar la solicitud: " + t.getMessage());
+                    t.printStackTrace();
+                }
+            });
+        } else {
+            Log.d("fetchInfo", "No hay conexión a internet");
+        }
+    }
+
+    public boolean tengoInternet() {
+        // Obtener la actividad asociada al Fragment
+        Context context = getActivity();
+        if (context != null) {
+            // Obtener el servicio ConnectivityManager desde el contexto de la actividad
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (manager != null) {
+                // Obtener información de la red
+                NetworkInfo activeNetworkInfo = manager.getActiveNetworkInfo();
+                return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+            }
+        }
+        return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
     }
 }

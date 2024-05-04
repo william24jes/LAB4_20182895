@@ -47,7 +47,7 @@ public class GeolocalizacionAdapter extends RecyclerView.Adapter<Geolocalizacion
         return dtoCiudadList.size();
     }
 
-    public List<DtoCiudad> getListaClima() {
+    public List<DtoCiudad> getListaCiudad() {
         return dtoCiudadList;
     }
 
