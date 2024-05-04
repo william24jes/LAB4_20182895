@@ -88,8 +88,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleGeo"
-        android:layout_width="404dp"
-        android:layout_height="349dp"
+        android:layout_width="411dp"
+        android:layout_height="446dp"
         android:layout_marginTop="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

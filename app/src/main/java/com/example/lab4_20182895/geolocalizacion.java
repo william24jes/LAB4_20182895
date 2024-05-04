@@ -21,6 +21,7 @@ import com.example.lab4_20182895.Recycle.GeolocalizacionAdapter;
 import com.example.lab4_20182895.Services.CiudadService;
 import com.example.lab4_20182895.databinding.GeolocalizacionBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +39,7 @@ public class geolocalizacion extends Fragment {
 
     GeolocalizacionBinding geolocalizacionBinding;
     CiudadService ciudadService;
+    private List<DtoCiudad> ciudadesBuscadas = new ArrayList<>(); // Lista de todas las ciudades buscadas
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,14 +97,12 @@ public class geolocalizacion extends Fragment {
                 .create(CiudadService.class);
         //
 
-        fetchInfo("London");
-        System.out.println("La cidua es");
-
-
+        geolocalizacionBinding.botonBuscarGeo.setOnClickListener(view -> {
+            fetchInfo(geolocalizacionBinding.buscarCiudad.getQuery().toString());
+        });
 
         NavController navController = NavHostFragment.findNavController(geolocalizacion.this);
         geolocalizacionBinding.climaDeGeo.setOnClickListener(view -> {
-
             navController.navigate(R.id.action_geolocalizacion_to_clima);
         });
         // Inflate the layout for this fragment
@@ -115,15 +115,16 @@ public class geolocalizacion extends Fragment {
                 @Override
                 public void onResponse(Call<List<DtoCiudad>> call, Response<List<DtoCiudad>> response) {
                     if (response.isSuccessful()) {
-                        List<DtoCiudad> ciudades = response.body();
-                        if (ciudades != null && !ciudades.isEmpty()) {
+                        List<DtoCiudad> nuevasCiudades = response.body();
+                        if (nuevasCiudades != null && !nuevasCiudades.isEmpty()) {
+                            // Agregar las nuevas ciudades a la lista acumulativa
+                            ciudadesBuscadas.addAll(nuevasCiudades);
 
+                            // Actualizar el adaptador con todas las ciudades buscadas
                             GeolocalizacionAdapter geolocalizacionAdapter = new GeolocalizacionAdapter();
-                            geolocalizacionAdapter.setListaCiudad(ciudades);
-
+                            geolocalizacionAdapter.setListaCiudad(ciudadesBuscadas);
                             geolocalizacionBinding.recycleGeo.setAdapter(geolocalizacionAdapter);
                             geolocalizacionBinding.recycleGeo.setLayoutManager(new LinearLayoutManager(getContext()));
-
                         }
                     }
                 }
@@ -139,7 +140,6 @@ public class geolocalizacion extends Fragment {
         }
     }
 
-
     public boolean tengoInternet() {
         // Obtener la actividad asociada al Fragment
         Context context = getActivity();
@@ -154,7 +154,4 @@ public class geolocalizacion extends Fragment {
         }
         return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
     }
-
-
-
 }
