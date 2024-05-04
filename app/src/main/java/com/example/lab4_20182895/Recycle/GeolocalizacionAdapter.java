@@ -1,13 +1,9 @@
 package com.example.lab4_20182895.Recycle;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +23,7 @@ public class GeolocalizacionAdapter extends RecyclerView.Adapter<Geolocalizacion
     @Override
     public GeolocalizacionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext(); // Inicializar el contexto aquí
-        View inflate = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.item_geo, parent, false);
         return new GeolocalizacionViewHolder(inflate);
     }
 
@@ -41,8 +37,8 @@ public class GeolocalizacionAdapter extends RecyclerView.Adapter<Geolocalizacion
         TextView recLong = holder.itemView.findViewById(R.id.recLong);
 
         recCiudad.setText(dtoCiudad.getName());
-        recLat.setText(dtoCiudad.getLat());
-        recLong.setText(dtoCiudad.getLon());
+        recLat.setText("Lat: "+dtoCiudad.getLat());
+        recLong.setText("Lon: "+dtoCiudad.getLon());
 
     }
 
