@@ -5,8 +5,8 @@ import java.util.Map;
 public class DtoCiudad {
     private String name;
     private Map<String, String> localNames;
-    private double lat;
-    private double lon;
+    private String lat;
+    private String lon;
     private String country;
     private String state;
 
@@ -27,19 +27,19 @@ public class DtoCiudad {
         this.localNames = localNames;
     }
 
-    public double getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 

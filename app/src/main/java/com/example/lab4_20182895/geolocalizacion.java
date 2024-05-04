@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.lab4_20182895.Dto.DtoCiudad;
+import com.example.lab4_20182895.Recycle.GeolocalizacionAdapter;
 import com.example.lab4_20182895.Services.CiudadService;
 import com.example.lab4_20182895.databinding.GeolocalizacionBinding;
 
@@ -115,9 +117,13 @@ public class geolocalizacion extends Fragment {
                     if (response.isSuccessful()) {
                         List<DtoCiudad> ciudades = response.body();
                         if (ciudades != null && !ciudades.isEmpty()) {
-                            DtoCiudad dtoCiudad = ciudades.get(0);
-                            geolocalizacionBinding.textView3.setText(dtoCiudad.getName());
-                            System.out.println("La ciudad es " + dtoCiudad.getName());
+
+                            GeolocalizacionAdapter geolocalizacionAdapter = new GeolocalizacionAdapter();
+                            geolocalizacionAdapter.setListaCiudad(ciudades);
+
+                            geolocalizacionBinding.recycleGeo.setAdapter(geolocalizacionAdapter);
+                            geolocalizacionBinding.recycleGeo.setLayoutManager(new LinearLayoutManager(getContext()));
+
                         }
                     }
                 }
