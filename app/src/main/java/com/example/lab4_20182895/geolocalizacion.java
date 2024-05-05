@@ -197,18 +197,15 @@ public class geolocalizacion extends Fragment implements SensorEventListener {
     }
 
     public boolean tengoInternet() {
-        // Obtener la actividad asociada al Fragment
         Context context = getActivity();
         if (context != null) {
-            // Obtener el servicio ConnectivityManager desde el contexto de la actividad
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (manager != null) {
-                // Obtener información de la red
                 NetworkInfo activeNetworkInfo = manager.getActiveNetworkInfo();
                 return activeNetworkInfo != null && activeNetworkInfo.isConnected();
             }
         }
-        return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
+        return false;
     }
 
     @Override
@@ -221,12 +218,11 @@ public class geolocalizacion extends Fragment implements SensorEventListener {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
 
-            // Calculamos el módulo de la aceleración
             float modulo = (float) Math.sqrt(x * x + y * y + z * z);
 
             if (modulo > 15){
                 mostrarDialogoEliminar();
-                sensorActivo = false; // Detener la escucha del sensor
+                sensorActivo = false; //
             }
         }
     }

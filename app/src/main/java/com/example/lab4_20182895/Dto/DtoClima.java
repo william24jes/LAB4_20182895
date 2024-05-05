@@ -275,24 +275,8 @@ public class DtoClima {
         }
 
         public String getDeg() {
-            try {
-                double windDegree = Double.parseDouble(deg);
-
-                // Array de direcciones cardinales principales
-                String[] directions = {"Norte", "Norte", "Norte", "Noreste", "Este", "Sureste", "Sur", "Sur", "Sur", "Suroeste", "Oeste", "Noroeste", "Norte", "Norte", "Norte", "Noreste"};
-
-                // Calcular el índice en el array de direcciones
-                int index = (int) Math.round((windDegree % 360) / 22.5);
-
-                // Asignar la dirección correspondiente al viento
-                return directions[(index + 16) % 16];
-            } catch (NumberFormatException e) {
-                // Manejar el error si la cadena no es un número
-                return ""; // O retorna un valor por defecto si no se puede convertir
-            }
+            return deg;
         }
-
-
 
         public void setDeg(String deg) {
             this.deg = deg;
@@ -306,6 +290,7 @@ public class DtoClima {
             this.gust = gust;
         }
     }
+
 
     public static class Clouds {
         private String all;

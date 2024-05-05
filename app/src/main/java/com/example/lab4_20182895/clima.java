@@ -1,6 +1,12 @@
 package com.example.lab4_20182895;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.lab4_20182895.Dto.DtoCiudad;
 import com.example.lab4_20182895.Dto.DtoClima;
@@ -37,11 +44,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link clima#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class clima extends Fragment {
+public class clima extends Fragment implements SensorEventListener {
 
     ClimaBinding climaBinding;
     ClimaService climaService;
     private List<DtoClima> climasBuscados = new ArrayList<>();
+    SensorManager mSensorManager;
+
+    private String direccion;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,6 +99,33 @@ public class clima extends Fragment {
 
         climaBinding= ClimaBinding.inflate(inflater, container, false);
 
+        mSensorManager = (SensorManager) requireContext().getSystemService(SENSOR_SERVICE);
+
+        if(mSensorManager != null){ //validar si tengo sensores
+
+            Sensor acelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Sensor magnetometro = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+            if(acelerometer != null) { //validar un sensor en particular
+                Toast.makeText(requireContext(), "Sí tiene acelerómetro", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(requireContext(), "Su equipo no dispone de acelerómetro",Toast.LENGTH_SHORT).show();
+            }
+
+            if(magnetometro != null) { //validar un sensor en particular
+                Toast.makeText(requireContext(), "Sí tiene magnetometro", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(requireContext(), "Su equipo no dispone de magnetometro",Toast.LENGTH_SHORT).show();
+            }
+
+            List<Sensor> sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+            for(Sensor sensor : sensorList){
+                Log.d("msg-test-sensorList","sensorName: " + sensor.getName());
+            }
+        }else{
+            Toast.makeText(requireContext(), "Su dispositivo no posee sensores :(", Toast.LENGTH_SHORT).show();
+        }
+
         //API
         climaService = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org")
@@ -97,7 +134,6 @@ public class clima extends Fragment {
                 .create(ClimaService.class);
         //
 
-        //FALTA VERIFICAR QUE FUNCIONE CUANDO NO ESTEN VACIOS LOS DOS CAMPOS
         climaBinding.botonBuscarClima.setOnClickListener(view -> {
             fetchInfo(climaBinding.buscarLatitud.getQuery().toString(), climaBinding.buscarLongitud.getQuery().toString());
         });
@@ -111,6 +147,21 @@ public class clima extends Fragment {
         return climaBinding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Sensor mMagnetometro = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensorManager.registerListener(this, mMagnetometro, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mSensorManager.unregisterListener(this);
+    }
+
     public void fetchInfo(String lat, String lon) {
         if (tengoInternet()) {
             climaService.getClima(lat, lon, "792edf06f1f5ebcaf43632b55d8b03fe").enqueue(new Callback<DtoClima>() {
@@ -118,9 +169,13 @@ public class clima extends Fragment {
                 public void onResponse(Call<DtoClima> call, Response<DtoClima> response) {
                     if (response.isSuccessful()) {
                         DtoClima dtoClima = response.body();
+                        DtoClima.Wind wind=new DtoClima.Wind();
+                        wind.setDeg(getDireccion());
                         if (dtoClima != null) {
                             // Agregar el nuevo objeto DtoClima a la lista
+                            dtoClima.setWind(wind);
                             climasBuscados.add(dtoClima);
+
 
                             // Actualizar el RecyclerView con la lista actualizada
                             ClimaAdapter climaAdapter = new ClimaAdapter();
@@ -155,5 +210,65 @@ public class clima extends Fragment {
             }
         }
         return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        int sensorType = sensorEvent.sensor.getType();
+        if(sensorType == Sensor.TYPE_MAGNETIC_FIELD){
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+
+            // Calcular la dirección del viento basada en los datos del magnetómetro
+            String windDirection = calculateWindDirection(x, y);
+            System.out.println(x+" "+y);
+            Log.i("TAG", x+" "+y);
+
+            // Actualizar la vista con la dirección del viento calculada
+            updateWindDirectionInView(windDirection);
+        }
+    }
+
+    private String calculateWindDirection(float x, float y) {
+        // Verificar los valores de los ejes X e Y
+        if (x > 0 && y > 0) {
+            return "Noreste";
+        } else if (x < 0 && y > 0) {
+            return "Noroeste";
+        } else if (x < 0 && y < 0) {
+            return "Suroeste";
+        } else if (x > 0 && y < 0) {
+            return "Sureste";
+        } else if (x == 0 && y > 0) {
+            return "Norte";
+        } else if (x == 0 && y < 0) {
+            return "Sur";
+        } else if (x > 0 && y == 0) {
+            return "Este";
+        } else if (x < 0 && y == 0) {
+            return "Oeste";
+        } else {
+            // Si ambos valores son 0, no se puede determinar la dirección
+            return "Indefinido";
+        }
+    }
+
+
+    private void updateWindDirectionInView(String windDirection) {
+        setDireccion(windDirection);
+    }
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }
