@@ -233,16 +233,15 @@ public class geolocalizacion extends Fragment implements SensorEventListener {
 
     private void mostrarDialogoEliminar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Eliminar último elemento");
-        builder.setMessage("¿Estás seguro de que deseas eliminar el último elemento de la lista?");
-        builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+        builder.setTitle("Deshacer acción?");
+        builder.setPositiveButton("Deshacer", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 eliminarUltimoElemento();
                 sensorActivo = true; // Reanudar la escucha del sensor
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
