@@ -198,13 +198,10 @@ public class clima extends Fragment implements SensorEventListener {
     }
 
     public boolean tengoInternet() {
-        // Obtener la actividad asociada al Fragment
         Context context = getActivity();
         if (context != null) {
-            // Obtener el servicio ConnectivityManager desde el contexto de la actividad
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (manager != null) {
-                // Obtener información de la red
                 NetworkInfo activeNetworkInfo = manager.getActiveNetworkInfo();
                 return activeNetworkInfo != null && activeNetworkInfo.isConnected();
             }
@@ -219,18 +216,17 @@ public class clima extends Fragment implements SensorEventListener {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
 
-            // Calcular la dirección del viento basada en los datos del magnetómetro
+            // Calcular la dirección
             String windDirection = calculateWindDirection(x, y);
-            System.out.println(x+" "+y);
             Log.i("TAG", x+" "+y);
 
-            // Actualizar la vista con la dirección del viento calculada
+            // Actualizar la vista con la dirección del viento
             updateWindDirectionInView(windDirection);
         }
     }
 
     private String calculateWindDirection(float x, float y) {
-        // Verificar los valores de los ejes X e Y
+
         if (x > 0 && y > 0) {
             return "Noreste";
         } else if (x < 0 && y > 0) {

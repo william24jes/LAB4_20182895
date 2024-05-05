@@ -270,7 +270,6 @@ public class geolocalizacion extends Fragment implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Método necesario de la interfaz SensorEventListener, pero no necesitamos implementarlo aquí
     }
 
 }
