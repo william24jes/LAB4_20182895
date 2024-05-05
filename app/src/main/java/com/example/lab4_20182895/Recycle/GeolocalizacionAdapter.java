@@ -22,7 +22,7 @@ public class GeolocalizacionAdapter extends RecyclerView.Adapter<Geolocalizacion
     @NonNull
     @Override
     public GeolocalizacionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext(); // Inicializar el contexto aquí
+        context = parent.getContext();
         View inflate = LayoutInflater.from(context).inflate(R.layout.item_geo, parent, false);
         return new GeolocalizacionViewHolder(inflate);
     }

@@ -1,17 +1,18 @@
 package com.example.lab4_20182895;
 
 import static android.content.Context.SENSOR_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lab4_20182895.Dto.DtoCiudad;
@@ -30,6 +32,7 @@ import com.example.lab4_20182895.databinding.GeolocalizacionBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,13 +45,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link geolocalizacion#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class geolocalizacion extends Fragment {
+public class geolocalizacion extends Fragment implements SensorEventListener {
 
     GeolocalizacionBinding geolocalizacionBinding;
     CiudadService ciudadService;
     private List<DtoCiudad> ciudadesBuscadas = new ArrayList<>(); // Lista de todas las ciudades buscadas
     SensorManager mSensorManager;
-    SensorAccListener listener = new SensorAccListener();
+    private boolean sensorActivo = true;
+    private static final String TAG = "msg-test-SensorAccListener";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -133,7 +137,6 @@ public class geolocalizacion extends Fragment {
                 .create(CiudadService.class);
         //
 
-
         geolocalizacionBinding.botonBuscarGeo.setOnClickListener(view -> {
             fetchInfo(geolocalizacionBinding.buscarCiudad.getQuery().toString());
         });
@@ -142,6 +145,7 @@ public class geolocalizacion extends Fragment {
         geolocalizacionBinding.climaDeGeo.setOnClickListener(view -> {
             navController.navigate(R.id.action_geolocalizacion_to_clima);
         });
+
         // Inflate the layout for this fragment
         return geolocalizacionBinding.getRoot();
     }
@@ -151,18 +155,14 @@ public class geolocalizacion extends Fragment {
         super.onResume();
 
         Sensor mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(listener,mAccelerometer,SensorManager.SENSOR_DELAY_UI);
-        //mSensorManager.registerListener(listener,mAcc,20000000);
-
-        //Sensor mGyr = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        //mSensorManager.registerListener(listener,mGyr,SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        mSensorManager.unregisterListener(listener);
+        mSensorManager.unregisterListener(this);
     }
 
     public void fetchInfo(String ciudad) {
@@ -211,5 +211,71 @@ public class geolocalizacion extends Fragment {
         return false; // Si no se pudo obtener el servicio o no hay conexión, retornar falso
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (!sensorActivo) return; // Si el sensor no está activo, salir del método
+
+        int sensorType = sensorEvent.sensor.getType();
+        if(sensorType == Sensor.TYPE_ACCELEROMETER){
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            // Calculamos el módulo de la aceleración
+            float modulo = (float) Math.sqrt(x * x + y * y + z * z);
+
+            if (modulo > 15){
+                mostrarDialogoEliminar();
+                sensorActivo = false; // Detener la escucha del sensor
+            }
+        }
+    }
+
+    private void mostrarDialogoEliminar() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Eliminar último elemento");
+        builder.setMessage("¿Estás seguro de que deseas eliminar el último elemento de la lista?");
+        builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                eliminarUltimoElemento();
+                sensorActivo = true; // Reanudar la escucha del sensor
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                sensorActivo = true; // Reanudar la escucha del sensor
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                sensorActivo = true; // Reanudar la escucha del sensor cuando se cierra el diálogo sin hacer clic en ningún botón
+            }
+        });
+        builder.show();
+    }
+
+    private void eliminarUltimoElemento() {
+        if (!ciudadesBuscadas.isEmpty()) {
+            ciudadesBuscadas.remove(ciudadesBuscadas.size() - 1);
+            // Actualizar el adaptador con la lista actualizada
+            GeolocalizacionAdapter geolocalizacionAdapter = new GeolocalizacionAdapter();
+            geolocalizacionAdapter.setListaCiudad(ciudadesBuscadas);
+            geolocalizacionBinding.recycleGeo.setAdapter(geolocalizacionAdapter);
+            geolocalizacionBinding.recycleGeo.setLayoutManager(new LinearLayoutManager(getContext()));
+            Toast.makeText(requireContext(), "Último elemento eliminado", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "La lista está vacía", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Método necesario de la interfaz SensorEventListener, pero no necesitamos implementarlo aquí
+    }
 
 }

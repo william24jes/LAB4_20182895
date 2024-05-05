@@ -27,11 +27,11 @@ public class SensorAccListener implements SensorEventListener {
             Log.d(TAG,"Valor de y: " + y);
             Log.d(TAG,"Valor de z: " + z);
 
-            /*if (modulo> 15){
-                TextView findBy
+            if (modulo> 15){
+                TextView findView;
 
 
-            }*/
+            }
         }
     }
 
